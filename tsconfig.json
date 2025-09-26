@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.node.json",
+  "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "allowJs": false,
+    "checkJs": false,
+    "resolveJsonModule": true,
+    "module": "ESNext",
+    "target": "ESNext",
+    "isolatedModules": true,
+    "types": [
+      "svelte"
+    ]
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.svelte"
+  ]
+}

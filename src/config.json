@@ -1,0 +1,52 @@
+{
+  "shipName": "Princess Rao",
+  "maxPower": 260,
+  "basicSystems": {
+    "power": 40,
+    "enabled": true
+  },
+  "mDrive": {
+    "maxPower": 120,
+    "currentPower": 120
+  },
+  "jDrive": {
+    "power": 40,
+    "enabled": false
+  },
+  "sensors": [
+    {
+      "name": "Advanced Sensors",
+      "power": 6,
+      "enabled": true
+    },
+    {
+      "name": "Military Countermeasures",
+      "power": 2,
+      "enabled": true
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Particle Barbette",
+      "power": 15,
+      "enabled": true
+    },
+    {
+      "name": "Pulse Laser",
+      "power": 4,
+      "enabled": true
+    }
+  ],
+  "other": [
+    {
+      "name": "Holographic Hull",
+      "power": 100,
+      "enabled": false
+    },
+    {
+      "name": "Low Berths",
+      "power": 1,
+      "enabled": false
+    }
+  ]
+}
