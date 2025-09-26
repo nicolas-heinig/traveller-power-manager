@@ -88,109 +88,114 @@
   const openGameStateModal = () => (isGameStateModalOpen = true);
 </script>
 
-<main class="p-4 max-w-md mx-auto">
-  <header class="flex items-center justify-between px-4 py-2 mb-2">
-    <div class="w-6"></div>
-    <h1 class="text-3xl font-bold text-center">
-      {systems.shipName}
-    </h1>
-
-    <button
-      class="btn btn-ghost btn-sm"
-      aria-label="Edit"
-      onclick={openGameStateModal}
-    >
-      <EditIcon />
-    </button>
-  </header>
-
+<main class="max-w-md mx-auto">
   <GameStateModal bind:isGameStateModalOpen bind:systems />
 
-  <h2
-    class="text-2xl font-bold text-center mb-4"
-    class:text-error={overload}
-    class:text-primary={!overload}
-    class:mb-2={overload}
-    class:mb-4={!overload}
+  <div
+    class="sticky top-0 z-10 bg-base-100 border-b-2 border-base-300 mb-4 shadow-b-md"
   >
-    {totalPower()} / {maxPower}
-  </h2>
+    <div class="flex items-center justify-between px-4 py-2">
+      <div class="w-6"></div>
+      <h1 class="text-3xl font-bold text-center">
+        {systems.shipName}
+      </h1>
 
-  {#if overload}
-    <p class="text-center text-error font-semibold mb-4">
-      ⚠️ Power overload! Systems unstable!
-    </p>
-  {/if}
-
-  <Section header="Basic Systems">
-    <SystemCard
-      name={"Non essential Systems"}
-      enabled={systems.basicSystems.enabled}
-      power={systems.basicSystems.power / 2}
-      onChange={() => toggleSystem(systems.basicSystems)}
-    />
-  </Section>
-
-  <Section header="Drives">
-    <div class="card card-sm shadow-lg bg-base-200">
-      <div class="p-4">
-        <h2 class="font-bold">M-Drive</h2>
-
-        <input
-          type="range"
-          min="0"
-          max={systems.mDrive.maxPower}
-          step="20"
-          bind:value={systems.mDrive.currentPower}
-          class="mt-2 range range-primary"
-        />
-
-        <div class="flex justify-between px-3 mt-2 text-xs">
-          {#each mDriveTicks as val}
-            <span>{val}</span>
-          {/each}
-        </div>
-      </div>
+      <button
+        class="btn btn-ghost btn-sm"
+        aria-label="Edit"
+        onclick={openGameStateModal}
+      >
+        <EditIcon />
+      </button>
     </div>
 
-    <SystemCard
-      name={"J-Drive"}
-      enabled={systems.jDrive.enabled}
-      power={systems.jDrive.power}
-      onChange={() => toggleSystem(systems.jDrive)}
-    />
-  </Section>
+    <h2
+      class="text-2xl font-bold text-center mb-4"
+      class:text-error={overload}
+      class:text-primary={!overload}
+      class:mb-2={overload}
+      class:mb-4={!overload}
+    >
+      {totalPower()} / {maxPower}
+    </h2>
 
-  <Section header="Sensors">
-    {#each systems.sensors as sensor}
+    {#if overload}
+      <p class="text-center text-error font-semibold mb-4">
+        ⚠️ Power overload! Systems unstable!
+      </p>
+    {/if}
+  </div>
+  <div class="p-4">
+    <Section header="Basic Systems">
       <SystemCard
-        name={sensor.name}
-        enabled={sensor.enabled}
-        power={sensor.power}
-        onChange={() => toggleSystem(sensor)}
+        name={"Non essential Systems"}
+        enabled={systems.basicSystems.enabled}
+        power={systems.basicSystems.power / 2}
+        onChange={() => toggleSystem(systems.basicSystems)}
       />
-    {/each}
-  </Section>
+    </Section>
 
-  <Section header="Weapons">
-    {#each systems.weapons as weapon}
-      <SystemCard
-        name={weapon.name}
-        enabled={weapon.enabled}
-        power={weapon.power}
-        onChange={() => toggleSystem(weapon)}
-      />
-    {/each}
-  </Section>
+    <Section header="Drives">
+      <div class="card card-sm shadow-lg bg-base-200">
+        <div class="p-4">
+          <h2 class="font-bold">M-Drive</h2>
 
-  <Section header="Other Systems">
-    {#each systems.other as system}
+          <input
+            type="range"
+            min="0"
+            max={systems.mDrive.maxPower}
+            step="20"
+            bind:value={systems.mDrive.currentPower}
+            class="mt-2 range range-primary"
+          />
+
+          <div class="flex justify-between px-3 mt-2 text-xs">
+            {#each mDriveTicks as val}
+              <span>{val}</span>
+            {/each}
+          </div>
+        </div>
+      </div>
+
       <SystemCard
-        name={system.name}
-        enabled={system.enabled}
-        power={system.power}
-        onChange={() => toggleSystem(system)}
+        name={"J-Drive"}
+        enabled={systems.jDrive.enabled}
+        power={systems.jDrive.power}
+        onChange={() => toggleSystem(systems.jDrive)}
       />
-    {/each}
-  </Section>
+    </Section>
+
+    <Section header="Sensors">
+      {#each systems.sensors as sensor}
+        <SystemCard
+          name={sensor.name}
+          enabled={sensor.enabled}
+          power={sensor.power}
+          onChange={() => toggleSystem(sensor)}
+        />
+      {/each}
+    </Section>
+
+    <Section header="Weapons">
+      {#each systems.weapons as weapon}
+        <SystemCard
+          name={weapon.name}
+          enabled={weapon.enabled}
+          power={weapon.power}
+          onChange={() => toggleSystem(weapon)}
+        />
+      {/each}
+    </Section>
+
+    <Section header="Other Systems">
+      {#each systems.other as system}
+        <SystemCard
+          name={system.name}
+          enabled={system.enabled}
+          power={system.power}
+          onChange={() => toggleSystem(system)}
+        />
+      {/each}
+    </Section>
+  </div>
 </main>

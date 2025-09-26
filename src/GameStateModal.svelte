@@ -21,7 +21,7 @@
 {#if isGameStateModalOpen}
   <dialog class="modal modal-open modal-bottom sm:modal-middle">
     <div class="modal-box">
-      <h3 class="text-lg font-bold">Enter the game state here:</h3>
+      <h3 class="text-lg font-bold mb-4">Enter the game state here:</h3>
 
       <textarea
         class="textarea textarea-bordered w-full h-80 font-mono text-sm"
