@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
+  import { IconCode, IconAdjustmentsBolt } from "@tabler/icons-svelte";
+
   import config from "./config.json";
   import Section from "./Section.svelte";
   import SystemCard from "./SystemCard.svelte";
-  import EditIcon from "./EditIcon.svelte";
   import GameStateModal from "./GameStateModal.svelte";
+  import PlantControlPanel from "./PlantControlPanel.svelte";
 
   interface System {
     name: string;
@@ -21,7 +23,11 @@
 
   let systems = $state(initialConfig);
 
-  let maxPower: number = $derived(systems.maxPower);
+  let maxPower: number = $derived(
+    systems.powerPlant.overload
+      ? systems.powerPlant.maxPower * 1.1
+      : systems.powerPlant.maxPower,
+  );
 
   let totalPower = $derived(() => {
     let result = 0;
@@ -59,7 +65,7 @@
     return result;
   });
 
-  let overload = $derived(totalPower() > maxPower);
+  let isOverPowered = $derived(totalPower() > maxPower);
 
   const toggleSystem = (system: System) => (system.enabled = !system.enabled);
 
@@ -76,7 +82,7 @@
 
   let interval: number;
   onMount(() => {
-    interval = setInterval(saveGameState, 2000);
+    interval = setInterval(saveGameState, 5000);
   });
 
   onDestroy(() => {
@@ -84,44 +90,55 @@
   });
 
   let isGameStateModalOpen = $state(false);
-
   const openGameStateModal = () => (isGameStateModalOpen = true);
+
+  let isPlantControlPanelOpen = $state(false);
+  const openPlantControlModal = () => (isPlantControlPanelOpen = true);
 </script>
 
 <main class="max-w-md mx-auto">
   <GameStateModal bind:isGameStateModalOpen bind:systems />
+  <PlantControlPanel bind:isPlantControlPanelOpen bind:systems />
 
   <div
     class="sticky top-0 z-10 bg-base-100 border-b-2 border-base-300 mb-4 shadow-b-md"
   >
     <div class="flex items-center justify-between px-4 py-2">
-      <div class="w-6"></div>
+      <button
+        class="btn btn-ghost btn-sm"
+        aria-label="Open Game State Editor"
+        onclick={openGameStateModal}
+      >
+        <IconCode />
+      </button>
+
       <h1 class="text-3xl font-bold text-center">
         {systems.shipName}
       </h1>
 
       <button
         class="btn btn-ghost btn-sm"
-        aria-label="Edit"
-        onclick={openGameStateModal}
+        aria-label="Open Power Controls"
+        onclick={openPlantControlModal}
       >
-        <EditIcon />
+        <IconAdjustmentsBolt />
       </button>
     </div>
 
     <h2
       class="text-2xl font-bold text-center mb-4"
-      class:text-error={overload}
-      class:text-primary={!overload}
-      class:mb-2={overload}
-      class:mb-4={!overload}
+      class:text-error={isOverPowered}
+      class:text-primary={!isOverPowered}
+      class:text-accent={!isOverPowered && systems.powerPlant.overload}
+      class:mb-2={isOverPowered}
+      class:mb-4={!isOverPowered}
     >
       {totalPower()} / {maxPower}
     </h2>
 
-    {#if overload}
+    {#if isOverPowered}
       <p class="text-center text-error font-semibold mb-4">
-        ⚠️ Power overload! Systems unstable!
+        ⚠️ Power over maximum! Systems unstable!
       </p>
     {/if}
   </div>

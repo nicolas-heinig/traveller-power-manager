@@ -1,9 +1,13 @@
 {
   "shipName": "Princess Rao",
-  "maxPower": 260,
   "basicSystems": {
     "power": 40,
     "enabled": true
+  },
+  "powerPlant": {
+    "maxPower": 260,
+    "overload": false,
+    "criticalHits": 0
   },
   "mDrive": {
     "maxPower": 120,
