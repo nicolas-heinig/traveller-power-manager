@@ -17,9 +17,9 @@
 
 {#if isPlantControlPanelOpen}
   <dialog class="modal modal-open modal-bottom sm:modal-middle">
-    <div class="modal-box p-4">
+    <div class="modal-box">
       <div class="flex mb-8">
-        <h3 class="font-bold">Overload:</h3>
+        <h3 class="text-lg font-bold">Overload:</h3>
 
         <input
           type="checkbox"
@@ -29,7 +29,7 @@
       </div>
 
       <div class="flex mb-8">
-        <h3 class="font-bold mr-auto">Critical Hits:</h3>
+        <h3 class="text-lg font-bold mr-auto">Critical Hits:</h3>
 
         {#each Array(systems.powerPlant.criticalHits)}
           <input

@@ -7,7 +7,10 @@ const systemSchema = z.object({
 });
 
 export const configSchema = z.object({
-  shipName: z.string(),
+  ship: z.object({
+    name: z.string(),
+    tonnage: z.number(),
+  }),
   basicSystems: z.object({
     power: z.number(),
     enabled: z.boolean(),
@@ -18,8 +21,8 @@ export const configSchema = z.object({
     criticalHits: z.number(),
   }),
   mDrive: z.object({
-    maxPower: z.number(),
-    currentPower: z.number(),
+    maxThrust: z.number(),
+    currentThrust: z.number(),
   }),
   jDrive: z.object({
     power: z.number(),

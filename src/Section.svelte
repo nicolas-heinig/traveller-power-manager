@@ -4,7 +4,7 @@
 
 <div>
   <h3 class="text-xl font-bold mb-2">{header}</h3>
-  <div class="space-y-4 mb-4">
+  <div class="space-y-4 mb-6">
     {@render children()}
   </div>
 </div>

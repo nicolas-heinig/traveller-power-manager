@@ -1,5 +1,8 @@
 {
-  "shipName": "Princess Rao",
+  "ship": {
+    "name": "Princess Rao",
+    "tonnage": 200
+  },
   "basicSystems": {
     "power": 40,
     "enabled": true
@@ -10,8 +13,8 @@
     "criticalHits": 0
   },
   "mDrive": {
-    "maxPower": 120,
-    "currentPower": 120
+    "maxThrust": 6,
+    "currentThrust": 6
   },
   "jDrive": {
     "power": 40,

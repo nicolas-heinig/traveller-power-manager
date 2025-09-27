@@ -18,69 +18,57 @@
   let systems = $state(initialSystems);
 
   let maxPower = $derived(() => {
-    let result = systems.powerPlant.maxPower;
+    const { powerPlant } = systems;
+    let { maxPower, criticalHits, overload } = powerPlant;
 
-    if (systems.powerPlant.criticalHits == 1) {
-      result *= 0.9;
-    } else if (systems.powerPlant.criticalHits == 2) {
-      result *= 0.9;
-    } else if (systems.powerPlant.criticalHits == 3) {
-      result *= 0.5;
-    } else if (systems.powerPlant.criticalHits >= 4) {
-      result = 0;
-    }
+    // Map critical hit count to multipliers
+    const multipliers: Record<number, number> = {
+      1: 0.9,
+      2: 0.9,
+      3: 0.5,
+    };
 
-    if (systems.powerPlant.overload) {
+    let result =
+      criticalHits >= 4 ? 0 : maxPower * (multipliers[criticalHits] ?? 1);
+
+    if (overload) {
       result *= 1.1;
     }
 
-    return result.toFixed(0);
+    return Math.round(result);
   });
 
   let totalPower = $derived(() => {
-    let result = 0;
+    const { basicSystems, mDrive, jDrive, ship, sensors, weapons, other } =
+      systems;
 
-    if (systems.basicSystems.enabled) {
-      result += systems.basicSystems.power;
-    } else {
-      result += systems.basicSystems.power / 2;
-    }
+    const basePower = basicSystems.enabled
+      ? basicSystems.power
+      : basicSystems.power / 2;
 
-    result += systems.mDrive.currentPower;
+    const thrustPower = mDrive.currentThrust * (ship.tonnage * 0.1);
 
-    if (systems.jDrive.enabled) {
-      result += systems.jDrive.power;
-    }
+    const jumpPower = jDrive.enabled ? jDrive.power : 0;
 
-    systems.sensors.forEach((sensor: System) => {
-      if (sensor.enabled) {
-        result += sensor.power;
-      }
-    });
+    const systemGroups = [sensors, weapons, other];
 
-    systems.weapons.forEach((weapon: System) => {
-      if (weapon.enabled) {
-        result += weapon.power;
-      }
-    });
+    const groupPower = systemGroups
+      .flat()
+      .filter((sys) => sys.enabled)
+      .reduce((sum, sys) => sum + sys.power, 0);
 
-    systems.other.forEach((system: System) => {
-      if (system.enabled) {
-        result += system.power;
-      }
-    });
-
-    return result;
+    return basePower + thrustPower + jumpPower + groupPower;
   });
 
   let isOverPowered = $derived(totalPower() > maxPower());
+  const mDriveTicks = $derived(
+    Array.from(
+      { length: Math.floor(systems.mDrive.maxThrust) + 1 },
+      (_, i) => i * systems.ship.tonnage * 0.1,
+    ),
+  );
 
   const toggleSystem = (system: System) => (system.enabled = !system.enabled);
-
-  const mDriveTicks = Array.from(
-    { length: Math.floor(systems.mDrive.maxPower / 20) + 1 },
-    (_, i) => i * 20,
-  );
 
   const saveGameState = () => {
     localStorage.setItem("gameState", JSON.stringify(systems));
@@ -121,7 +109,7 @@
       </button>
 
       <h1 class="text-3xl font-bold text-center">
-        {systems.shipName}
+        {systems.ship.name}
       </h1>
 
       <button
@@ -168,9 +156,8 @@
           <input
             type="range"
             min="0"
-            max={systems.mDrive.maxPower}
-            step="20"
-            bind:value={systems.mDrive.currentPower}
+            max={systems.mDrive.maxThrust}
+            bind:value={systems.mDrive.currentThrust}
             class="mt-2 range range-primary"
           />
 
