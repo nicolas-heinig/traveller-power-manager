@@ -17,17 +17,32 @@
   const savedConfig = localStorage.getItem("gameState");
 
   const initialConfig = savedConfig ? JSON.parse(savedConfig) : config;
+
   if (!savedConfig) {
     localStorage.setItem("gameState", JSON.stringify(config));
   }
 
   let systems = $state(initialConfig);
 
-  let maxPower: number = $derived(
-    systems.powerPlant.overload
-      ? systems.powerPlant.maxPower * 1.1
-      : systems.powerPlant.maxPower,
-  );
+  let maxPower = $derived(() => {
+    let result = systems.powerPlant.maxPower;
+
+    if (systems.powerPlant.criticalHits == 1) {
+      result *= 0.9;
+    } else if (systems.powerPlant.criticalHits == 2) {
+      result *= 0.9;
+    } else if (systems.powerPlant.criticalHits == 3) {
+      result *= 0.5;
+    } else if (systems.powerPlant.criticalHits >= 4) {
+      result = 0;
+    }
+
+    if (systems.powerPlant.overload) {
+      result *= 1.1;
+    }
+
+    return result.toFixed(0);
+  });
 
   let totalPower = $derived(() => {
     let result = 0;
@@ -65,7 +80,7 @@
     return result;
   });
 
-  let isOverPowered = $derived(totalPower() > maxPower);
+  let isOverPowered = $derived(totalPower() > maxPower());
 
   const toggleSystem = (system: System) => (system.enabled = !system.enabled);
 
@@ -133,7 +148,7 @@
       class:mb-2={isOverPowered}
       class:mb-4={!isOverPowered}
     >
-      {totalPower()} / {maxPower}
+      {totalPower()} / {maxPower()}
     </h2>
 
     {#if isOverPowered}

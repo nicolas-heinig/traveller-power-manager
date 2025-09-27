@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { IconClipboard } from "@tabler/icons-svelte";
+
   let { isGameStateModalOpen = $bindable(), systems = $bindable() } = $props();
 
   let buffer = $state(JSON.stringify(systems, null, 2));
@@ -21,6 +23,17 @@
 {#if isGameStateModalOpen}
   <dialog class="modal modal-open modal-bottom sm:modal-middle">
     <div class="modal-box">
+      <div class="flex mb-8">
+        <h3 class="text-lg font-bold">Copy current state:</h3>
+
+        <button
+          class="btn btn-ghost btn-sm ml-auto"
+          onclick={() => {
+            navigator.clipboard.writeText(buffer);
+          }}><IconClipboard /></button
+        >
+      </div>
+
       <h3 class="text-lg font-bold mb-4">Enter the game state here:</h3>
 
       <textarea
