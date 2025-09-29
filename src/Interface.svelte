@@ -35,6 +35,8 @@
       result *= 1.1;
     }
 
+    result += systems.batteries.inUse * systems.batteries.capacity;
+
     return Math.round(result);
   });
 

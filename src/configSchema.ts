@@ -15,6 +15,11 @@ export const configSchema = z.object({
     power: z.number(),
     enabled: z.boolean(),
   }),
+  batteries: z.object({
+    count: z.number(),
+    capacity: z.number(),
+    inUse: z.number(),
+  }),
   powerPlant: z.object({
     maxPower: z.number(),
     overload: z.boolean(),

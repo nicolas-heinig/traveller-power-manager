@@ -7,6 +7,11 @@
     "power": 40,
     "enabled": true
   },
+  "batteries": {
+    "count": 1,
+    "capacity": 60,
+    "inUse": 0
+  },
   "powerPlant": {
     "maxPower": 260,
     "overload": false,
@@ -52,6 +57,11 @@
     },
     {
       "name": "Low Berths",
+      "power": 1,
+      "enabled": false
+    },
+    {
+      "name": "Loading Belt",
       "power": 1,
       "enabled": false
     }
