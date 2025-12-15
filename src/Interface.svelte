@@ -35,8 +35,6 @@
       result *= 1.1;
     }
 
-    result += systems.batteries.inUse * systems.batteries.capacity;
-
     return Math.round(result);
   });
 
@@ -63,6 +61,15 @@
   });
 
   let isOverPowered = $derived(totalPower() > maxPower());
+  let areBatteriesDraining = $derived(isOverPowered && systems.batteries.inUse);
+  let battriesRounds = $derived(() =>
+    areBatteriesDraining
+      ? Math.floor(
+          systems.batteries.totalCapacity / (totalPower() - maxPower()),
+        )
+      : 0,
+  );
+
   const mDriveTicks = $derived(
     Array.from(
       { length: Math.floor(systems.mDrive.maxThrust) + 1 },
@@ -134,9 +141,15 @@
       {totalPower()} / {maxPower()}
     </h2>
 
-    {#if isOverPowered}
+    {#if isOverPowered && !areBatteriesDraining}
       <p class="text-center text-error font-semibold mb-4">
         ⚠️ Power over maximum! Systems unstable!
+      </p>
+    {/if}
+
+    {#if areBatteriesDraining}
+      <p class="text-center text-warning font-semibold mb-4">
+        ⚠️ Batteries will be drained in {battriesRounds()} rounds.
       </p>
     {/if}
   </div>

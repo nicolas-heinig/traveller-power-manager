@@ -3,17 +3,13 @@
     $props();
 
   let overload = $state(systems.powerPlant.overload);
+  let battriesInUse = $state(systems.batteries.inUse);
 
   let uncheckedCount = $derived(4 - systems.powerPlant.criticalHits);
 
-  const batteriesTicks = $derived(
-    Array.from({ length: systems.batteries.count + 1 }, (_, i) => i),
-  );
-
-  console.log(batteriesTicks);
-
   const save = () => {
     systems.powerPlant.overload = overload;
+    systems.batteries.inUse = battriesInUse;
     systems.powerPlant.criticalHits = document.querySelectorAll(
       "input.checkbox[type=checkbox]:checked",
     ).length;
@@ -30,6 +26,16 @@
         <input
           type="checkbox"
           bind:checked={overload}
+          class="toggle toggle-primary ml-auto"
+        />
+      </div>
+
+      <div class="flex mb-8">
+        <h3 class="text-lg font-bold">Batteries:</h3>
+
+        <input
+          type="checkbox"
+          bind:checked={battriesInUse}
           class="toggle toggle-primary ml-auto"
         />
       </div>
@@ -52,24 +58,6 @@
             checked={false}
           />
         {/each}
-      </div>
-
-      <div class="mb-8">
-        <h3 class="text-lg font-bold">Batteries in use:</h3>
-
-        <input
-          type="range"
-          min="0"
-          max={systems.batteries.count}
-          bind:value={systems.batteries.inUse}
-          class="mt-2 range range-primary"
-        />
-
-        <div class="flex justify-between px-3 mt-2 text-xs">
-          {#each batteriesTicks as val}
-            <span>{val}</span>
-          {/each}
-        </div>
       </div>
 
       <div class="modal-action">

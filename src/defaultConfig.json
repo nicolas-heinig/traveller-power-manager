@@ -8,9 +8,8 @@
     "enabled": true
   },
   "batteries": {
-    "count": 1,
-    "capacity": 60,
-    "inUse": 0
+    "totalCapacity": 60,
+    "inUse": false
   },
   "powerPlant": {
     "maxPower": 260,
